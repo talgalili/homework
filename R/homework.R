@@ -10,10 +10,26 @@
 # -----------------------------
 
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param file PARAM_DESCRIPTION
+#' @param env_name PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname source_to_env <- function(file, env_name) {
+#' @export
 source_to_env <- function(file, env_name) {
   assign(env_name, new.env(), envir = .GlobalEnv) # create a new mystical env
   source(file, local = get(env_name, envir = .GlobalEnv)) # brings all the functions to the local env created by the function
 }
+
+
 
 # "teacher_env"
 
@@ -61,6 +77,36 @@ source_to_env <- function(file, env_name) {
 # check_sol_fun - the function to use to compare the solutions. if you wish to set a specific function for a test, the
 #           "check_sol_fun" attribute should be added to that test in the list.
 #           attr(current_test, "check_sol_fun")
+
+
+
+
+
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param hw_submitters PARAM_DESCRIPTION
+#' @param sol_file PARAM_DESCRIPTION
+#' @param tests_to_run PARAM_DESCRIPTION
+#' @param student_id_fun PARAM_DESCRIPTION, Default: NULL
+#' @param timeout PARAM_DESCRIPTION, Default: 0.5
+#' @param use_do.call PARAM_DESCRIPTION
+#' @param check_sol_fun PARAM_DESCRIPTION, Default:
+#'                       function(student_sol, teacher_sol) {
+#'                         isTRUE(all.equal(
+#'                           student_sol, teacher_sol, tolerance = 0.01,
+#'                           check.attributes = FALSE
+#'                         ))
+#'                       }
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname test_students <- function(hw_submitters, sol_file, tests_to_run,
+#' @export
 test_students <- function(hw_submitters, sol_file, tests_to_run,
                           student_id_fun = NULL, # my_id
                           timeout = .5,
@@ -68,6 +114,8 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
                           check_sol_fun = function(student_sol, teacher_sol) {
                             isTRUE(all.equal(student_sol, teacher_sol, tolerance = 1e-2, check.attributes = FALSE))
                           }) {
+
+
 
   # clear old error files
   errors_files <- list.files("grades")
@@ -136,13 +184,17 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
       fun_teacher <- if (exists(fun_to_get, envir = teacher_env)) {
         get(fun_to_get, envir = teacher_env)
       } else {
-        function(...) print("This function was missing!")
+        function(...) {
+          print("This function was missing!")
+        }
       }
 
       fun_student <- if (exists(fun_to_get, envir = student_env)) {
         get(fun_to_get, envir = student_env)
       } else {
-        function(...) print("This function was missing!")
+        function(...) {
+          print("This function was missing!")
+        }
       }
 
       # fun_student <- get(paste0("q", i_question), envir = student_env)
@@ -277,6 +329,22 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
 
 
 # https://stackoverflow.com/questions/7963898/extracting-the-last-n-characters-from-a-string-in-r
+
+
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param x PARAM_DESCRIPTION
+#' @param n PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname substrRight <- function(x, n) {
+#' @export
 substrRight <- function(x, n) {
   substr(x, nchar(x) - n + 1, nchar(x))
 }
@@ -286,6 +354,21 @@ substrRight <- function(x, n) {
 
 # files - a charachter vector of R file names to be sourced and checked if they can be run with no problem.
 
+
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param files PARAM_DESCRIPTION
+#' @param ... PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname can_source <- function(files, ...) {
+#' @export
 can_source <- function(files, ...) {
   # find any errors...
   file_status <- data.frame(file = files, status = TRUE, note = "ok", stringsAsFactors = FALSE)
@@ -322,6 +405,25 @@ can_source <- function(files, ...) {
 
 #' @param files - a charachter vector of file names
 #' @return only files which are R/r files.
+#'
+
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param files PARAM_DESCRIPTION
+#' @param case_sensitive PARAM_DESCRIPTION, Default: FALSE
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[tools]{file_ext}}
+#' @rdname only_R_files <- function(files, case_sensitive = FALSE) {
+#' @export
+#' @importFrom tools file_ext
 only_R_files <- function(files, case_sensitive = FALSE) {
   files_ext <- tools::file_ext(files)
   if (!case_sensitive) files_ext <- toupper(files_ext)
@@ -334,6 +436,23 @@ only_R_files <- function(files, case_sensitive = FALSE) {
 
 
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param results PARAM_DESCRIPTION
+#' @param HW_number PARAM_DESCRIPTION
+#' @param tests_to_run PARAM_DESCRIPTION
+#' @param grades_folder PARAM_DESCRIPTION, Default: grades
+#' @param char_to_trim PARAM_DESCRIPTION, Default: 6
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname create_grade_files <- function(results, HW_number, tests_to_run,
+#' @export
 create_grade_files <- function(results, HW_number, tests_to_run, grades_folder = "grades\\", char_to_trim = 6) {
   results2 <- results
   success_per_question <- round(colMeans(results2[, -1]), 2) # this includes the mean final grade
@@ -374,6 +493,22 @@ create_grade_files <- function(results, HW_number, tests_to_run, grades_folder =
 
 
 # add trailing spaces of 0 and 7 length repeateadly in order to find when a student will copy paste a solution from one year to the next.
+
+
+
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param file PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname trap_copycats <- function(file) {
+#' @export
 trap_copycats <- function(file) {
   if (!file.exists(file)) return(invisible(FALSE))
 
