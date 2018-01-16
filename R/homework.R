@@ -6,8 +6,8 @@
 # http://stackoverflow.com/questions/19111956/suppress-error-message-in-r
 
 
-#------ Get the teacher's solutions
-#-----------------------------
+# ------ Get the teacher's solutions
+# -----------------------------
 
 
 source_to_env <- function(file, env_name) {
@@ -45,8 +45,8 @@ source_to_env <- function(file, env_name) {
 
 
 
-#------ Function to check student vs teacher answers
-#-----------------------------
+# ------ Function to check student vs teacher answers
+# -----------------------------
 
 
 
@@ -65,8 +65,9 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
                           student_id_fun = NULL, # my_id
                           timeout = .5,
                           use_do.call,
-                          check_sol_fun = function(student_sol, teacher_sol) {isTRUE(all.equal( student_sol, teacher_sol, tolerance = 1e-2, check.attributes = FALSE))}
-                          ) {
+                          check_sol_fun = function(student_sol, teacher_sol) {
+                            isTRUE(all.equal(student_sol, teacher_sol, tolerance = 1e-2, check.attributes = FALSE))
+                          }) {
 
   # clear old error files
   errors_files <- list.files("grades")
@@ -88,7 +89,7 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
 
   functions_to_check <- names(tests_to_run)
 
-  for(i in seq_along(hw_submitters)) {
+  for (i in seq_along(hw_submitters)) {
 
 
     # no longer needed since we now use env
@@ -97,7 +98,7 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
     # rm(list=as.vector(lsf.str())[-1]) # -1 so to not remove "create_solutions"
 
 
-    if(exists("student_env")) rm(student_env)
+    if (exists("student_env")) rm(student_env)
 
 
 
@@ -105,40 +106,44 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
     # try(source(hw_submitters[i]), silent = TRUE)
     try(source_to_env(file = hw_submitters[i], env_name = "student_env"), silent = TRUE)
 
-    if(!exists("student_env")) next # skip current file as the source failed...
+    if (!exists("student_env")) next # skip current file as the source failed...
 
 
 
-    if(is.null(student_id_fun)) {
+    if (is.null(student_id_fun)) {
       # use file name
       # https://stackoverflow.com/questions/2548815/find-file-name-from-full-file-path
-      grades[i,1] <- basename(hw_submitters[i]) # gets the filename
-      current_id <- grades[i,1]
+      grades[i, 1] <- basename(hw_submitters[i]) # gets the filename
+      current_id <- grades[i, 1]
     } else {
       # # lsf.str(envir = student_env)
       # moved to using the file name.
       # ls()
       # lsf.str()
       try(my_id <- get(student_id_fun, envir = student_env), silent = TRUE)
-      if(!exists("my_id")) next # skip current file since we don't have the my_id function!
-      try(grades[i,1] <- my_id(), silent = TRUE)
-      current_id <- grades[i,1]
+      if (!exists("my_id")) next # skip current file since we don't have the my_id function!
+      try(grades[i, 1] <- my_id(), silent = TRUE)
+      current_id <- grades[i, 1]
     }
 
 
 
 
     # go through every question
-    for(i_fun in functions_to_check) {
+    for (i_fun in functions_to_check) {
       fun_to_get <- i_fun
 
-      fun_teacher <- if(exists(fun_to_get, envir = teacher_env)) {
+      fun_teacher <- if (exists(fun_to_get, envir = teacher_env)) {
         get(fun_to_get, envir = teacher_env)
-        } else function(...) print("This function was missing!")
+      } else {
+        function(...) print("This function was missing!")
+      }
 
-      fun_student <- if(exists(fun_to_get, envir = student_env)) {
+      fun_student <- if (exists(fun_to_get, envir = student_env)) {
         get(fun_to_get, envir = student_env)
-      } else function(...) print("This function was missing!")
+      } else {
+        function(...) print("This function was missing!")
+      }
 
       # fun_student <- get(paste0("q", i_question), envir = student_env)
 
@@ -146,7 +151,7 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
 
       teachers_tests <- tests_to_run[[i_fun]]
 
-      for(i_tests in seq_along(teachers_tests)) {
+      for (i_tests in seq_along(teachers_tests)) {
         # teachers_tests = tests_to_run
         # i_tests = 2
         current_test <- teachers_tests[[i_tests]]
@@ -159,11 +164,11 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
         # I'm using R.utils::withTimeout so to deal with infinite loops...
         # https://stackoverflow.com/questions/7891073/time-out-an-r-command-via-something-like-try
 
-		# library(R.utils)
+        # library(R.utils)
 
 
-        if(missing(use_do.call)) {
-          if(all(names(current_test) %in% names(formals(fun_teacher)))) {
+        if (missing(use_do.call)) {
+          if (all(names(current_test) %in% names(formals(fun_teacher)))) {
             use_do.call <- TRUE
           } else {
             use_do.call <- FALSE
@@ -172,28 +177,27 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
 
 
         R.utils::withTimeout({
-
-            try({
-              # if(is.list(current_test) && length(current_test) > 1) {
-              if(is.list(current_test) && use_do.call) {
-                # then we must be having to use a function with several arguments
-                student_sol <- do.call(fun_student, current_test)
-                teacher_sol <- do.call(fun_teacher, current_test)
-              } else {
-                # it is a simple function with only one argument
-                student_sol <- fun_student(current_test)
-                teacher_sol <- fun_teacher(current_test)
-              }
-            }, silent = TRUE)
+          try({
+            # if(is.list(current_test) && length(current_test) > 1) {
+            if (is.list(current_test) && use_do.call) {
+              # then we must be having to use a function with several arguments
+              student_sol <- do.call(fun_student, current_test)
+              teacher_sol <- do.call(fun_teacher, current_test)
+            } else {
+              # it is a simple function with only one argument
+              student_sol <- fun_student(current_test)
+              teacher_sol <- fun_teacher(current_test)
+            }
+          }, silent = TRUE)
         }, timeout = timeout, onTimeout = "warning")
 
         # post modifications due to issue that might happen from rounding or others
-        if(!is.null(current_test_attr) & is.numeric(student_sol) & is.numeric(teacher_sol)) {
-          if("sort" %in% current_test_attr && isTRUE(attr(current_test, "sort"))) {
+        if (!is.null(current_test_attr) & is.numeric(student_sol) & is.numeric(teacher_sol)) {
+          if ("sort" %in% current_test_attr && isTRUE(attr(current_test, "sort"))) {
             student_sol <- sort(student_sol)
             teacher_sol <- sort(teacher_sol)
           }
-          if("round" %in% current_test_attr && is.numeric(attr(current_test, "round"))) {
+          if ("round" %in% current_test_attr && is.numeric(attr(current_test, "round"))) {
             how_much_to_round <- attr(current_test, "round")
             # print(paste(how_much_to_round, "----------------------"))
             student_sol <- round(student_sol, how_much_to_round)
@@ -201,7 +205,7 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
           }
         }
 
-        if("check_sol_fun" %in% current_test_attr ) {
+        if ("check_sol_fun" %in% current_test_attr) {
           current_check_sol_fun <- attr(teachers_tests, "check_sol_fun")
         } else {
           current_check_sol_fun <- check_sol_fun
@@ -224,7 +228,7 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
         # grades[i, paste0("q", i_question, "_test_", i_tests)] <- is_correct_answer
         grades[i, paste0(i_fun, "_test_", i_tests)] <- is_correct_answer
 
-        if(!is_correct_answer) {
+        if (!is_correct_answer) {
           # then - save the function and test to a file, so that the TA could more easily check it.
           # errors_file <- paste0(sol_file, "_students_errors.R")
           txt_fun_student <- capture.output(fun_student)
@@ -234,30 +238,25 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
 
           errors_file <- paste0("grades\\error_file_", i_fun, ".R")
 
-          write("# ======================",file=errors_file,append=TRUE)
-          write(paste0("# Student's file: ", current_id ),file=errors_file,append=TRUE)
-          write("# ======================",file=errors_file,append=TRUE)
-          write(paste0("# A wrong solution to question: ", i_fun, " test: ", i_tests),file=errors_file,append=TRUE)
-          write("# The test:",file=errors_file,append=TRUE)
-          write(txt_current_test,file=errors_file,append=TRUE)
-          write("# --------------------",file=errors_file,append=TRUE)
-          write("# The correct solution:",file=errors_file,append=TRUE)
-          write(txt_teacher_sol,file=errors_file,append=TRUE)
-          write("# --------------------",file=errors_file,append=TRUE)
-          write("# The student's solution:",file=errors_file,append=TRUE)
-          write(txt_student_sol,file=errors_file,append=TRUE)
-          write("# --------------------",file=errors_file,append=TRUE)
-          write("# The student's function:",file=errors_file,append=TRUE)
-          write(txt_fun_student,file=errors_file,append=TRUE)
-          write("# ======================",file=errors_file,append=TRUE)
+          write("# ======================", file = errors_file, append = TRUE)
+          write(paste0("# Student's file: ", current_id), file = errors_file, append = TRUE)
+          write("# ======================", file = errors_file, append = TRUE)
+          write(paste0("# A wrong solution to question: ", i_fun, " test: ", i_tests), file = errors_file, append = TRUE)
+          write("# The test:", file = errors_file, append = TRUE)
+          write(txt_current_test, file = errors_file, append = TRUE)
+          write("# --------------------", file = errors_file, append = TRUE)
+          write("# The correct solution:", file = errors_file, append = TRUE)
+          write(txt_teacher_sol, file = errors_file, append = TRUE)
+          write("# --------------------", file = errors_file, append = TRUE)
+          write("# The student's solution:", file = errors_file, append = TRUE)
+          write(txt_student_sol, file = errors_file, append = TRUE)
+          write("# --------------------", file = errors_file, append = TRUE)
+          write("# The student's function:", file = errors_file, append = TRUE)
+          write(txt_fun_student, file = errors_file, append = TRUE)
+          write("# ======================", file = errors_file, append = TRUE)
         }
-
-
-
       }
-
     }
-
   }
 
   # all the errors mean the function failed
@@ -265,7 +264,7 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
 
 
   # hw_grades <- rowSums(grades[,-1] / (ncol(grades)-1)) * 150
-  hw_grades <- rowMeans(grades[,-1]) * 150
+  hw_grades <- rowMeans(grades[, -1]) * 150
 
   # last value is the median of the grades
   # question_difficulty <- c(colMeans(grades[,-1]) , median(hw_grades))
@@ -278,8 +277,8 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
 
 
 # https://stackoverflow.com/questions/7963898/extracting-the-last-n-characters-from-a-string-in-r
-substrRight <- function(x, n){
-  substr(x, nchar(x)-n+1, nchar(x))
+substrRight <- function(x, n) {
+  substr(x, nchar(x) - n + 1, nchar(x))
 }
 
 
@@ -291,7 +290,7 @@ can_source <- function(files, ...) {
   # find any errors...
   file_status <- data.frame(file = files, status = TRUE, note = "ok", stringsAsFactors = FALSE)
   # outputs <- character(length(hw_submitters))
-  for(i in seq_along(hw_submitters)) {
+  for (i in seq_along(hw_submitters)) {
     # print(hw_submitters[i])
     # flush.console()
     source_failed <- TRUE
@@ -302,7 +301,7 @@ can_source <- function(files, ...) {
       source_failed <- FALSE
     }, silent = TRUE)
 
-    if(length(source_txt) > 0) {
+    if (length(source_txt) > 0) {
       # outputs[i] <- tmp
       file_status$note[i] <- "Unnecessary printing of output when running source"
       # next
@@ -311,11 +310,10 @@ can_source <- function(files, ...) {
     # }
     # else?! I have no idea how this coule happen...
     # source(hw_submitters[i])
-    if(source_failed) {
+    if (source_failed) {
       file_status$note[i] <- "Failed to source!"
       file_status$status[i] <- FALSE
     }
-
   }
 
   file_status
@@ -326,7 +324,7 @@ can_source <- function(files, ...) {
 #' @return only files which are R/r files.
 only_R_files <- function(files, case_sensitive = FALSE) {
   files_ext <- tools::file_ext(files)
-  if(!case_sensitive) files_ext <- toupper(files_ext)
+  if (!case_sensitive) files_ext <- toupper(files_ext)
   files[files_ext == "R"]
 }
 
@@ -337,15 +335,14 @@ only_R_files <- function(files, case_sensitive = FALSE) {
 
 
 create_grade_files <- function(results, HW_number, tests_to_run, grades_folder = "grades\\", char_to_trim = 6) {
-
   results2 <- results
-  success_per_question <- round(colMeans(results2[,-1]), 2)  # this includes the mean final grade
-  results2 <- rbind(results2, c("Success", success_per_question)  )
-  write.csv(results2, paste0(grades_folder, HW_number, "_grades.csv"), row.names = FALSE  )
+  success_per_question <- round(colMeans(results2[, -1]), 2) # this includes the mean final grade
+  results2 <- rbind(results2, c("Success", success_per_question))
+  write.csv(results2, paste0(grades_folder, HW_number, "_grades.csv"), row.names = FALSE)
 
   results2$ID[-nrow(results2)] <- substrRight(results2$ID[-nrow(results2)], char_to_trim)
   colnames(results2)[1] <- "ID (last 4 digits)"
-  write.csv(results2, paste0(grades_folder, HW_number, "_grades_for_students.csv"), row.names = FALSE  )
+  write.csv(results2, paste0(grades_folder, HW_number, "_grades_for_students.csv"), row.names = FALSE)
 
 
   # which questions should Yarden check (by order)
@@ -354,10 +351,9 @@ create_grade_files <- function(results, HW_number, tests_to_run, grades_folder =
   success_per_question2 <- head(success_per_question, -1)
   success_per_question <- sort(tapply(success_per_question2, tests_per_question, mean))
   what_to_check <- data.frame(question = names(success_per_question), success_per_question = round(success_per_question, 2))
-  write.csv(what_to_check, paste0(grades_folder, HW_number, "_what_to_chack.csv"), row.names = FALSE  )
+  write.csv(what_to_check, paste0(grades_folder, HW_number, "_what_to_chack.csv"), row.names = FALSE)
   #
   invisible(TRUE)
-
 }
 
 
@@ -379,8 +375,7 @@ create_grade_files <- function(results, HW_number, tests_to_run, grades_folder =
 
 # add trailing spaces of 0 and 7 length repeateadly in order to find when a student will copy paste a solution from one year to the next.
 trap_copycats <- function(file) {
-
-  if(!file.exists(file)) return(invisible(FALSE))
+  if (!file.exists(file)) return(invisible(FALSE))
 
   R_txt <- readLines(file)
   # removing trailing spaces
@@ -412,7 +407,3 @@ trap_copycats <- function(file) {
 #
 #
 #
-
-
-
-
