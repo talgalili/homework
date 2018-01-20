@@ -17,6 +17,7 @@ The original function, just with a different arg.
 \description{
 Useful when the teacher uses a function like function(x) and the student
 does something like function(X) or function(y)
+If the student had the first argument correct, it would not be changed.
 }
 \examples{
 fo <- function(y, ...) {

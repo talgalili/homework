@@ -62,6 +62,7 @@ source_to_env <- function(file, env_name, envir_home = .GlobalEnv) {
 #' @description
 #' Useful when the teacher uses a function like function(x) and the student
 #' does something like function(X) or function(y)
+#' If the student had the first argument correct, it would not be changed.
 #' @param fun the function to change
 #' @param first_arg the name of the first argument of the function to return, Default: x
 #' @return
@@ -76,10 +77,12 @@ source_to_env <- function(file, env_name, envir_home = .GlobalEnv) {
 #' @rdname fix_first_arg_in_fun
 #' @export
 fix_first_arg_in_fun <- function(fun, first_arg = "x") {
-  n_Args <- length(formals(fun))
-  formals(fun)[first_arg] <- NA
-  # formals(fun)
-  formals(fun)[[1]] <- as.name(first_arg)
+  if(first_arg != names(formals(fun))[1]) {
+    # n_Args <- length(formals(fun))
+    formals(fun)[first_arg] <- NA
+    # formals(fun)
+    formals(fun)[[1]] <- as.name(first_arg)
+  }
   fun
 }
 
