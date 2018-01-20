@@ -10,19 +10,18 @@
 # -----------------------------
 
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param file PARAM_DESCRIPTION
-#' @param env_name PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @title Loads sources function into an envir
+#' @description
+#' Sources an R file to get its functions and content into the environment.
+#' @param file the location of the .R file to source.
+#' @param env_name A name for the envir in which to store the data.
+#' @return A named environment with the content of the .R file
 #' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @rdname source_to_env <- function(file, env_name) {
 #' @export
 source_to_env <- function(file, env_name) {
   assign(env_name, new.env(), envir = .GlobalEnv) # create a new mystical env
@@ -105,7 +104,7 @@ source_to_env <- function(file, env_name) {
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @rdname test_students <- function(hw_submitters, sol_file, tests_to_run,
+#' @rdname test_students
 #' @export
 test_students <- function(hw_submitters, sol_file, tests_to_run,
                           student_id_fun = NULL, # my_id
@@ -343,7 +342,7 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @rdname substrRight <- function(x, n) {
+#' @rdname substrRight
 #' @export
 substrRight <- function(x, n) {
   substr(x, nchar(x) - n + 1, nchar(x))
@@ -352,22 +351,24 @@ substrRight <- function(x, n) {
 
 
 
-# files - a charachter vector of R file names to be sourced and checked if they can be run with no problem.
 
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param files PARAM_DESCRIPTION
-#' @param ... PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @title Check that .R file can be sourced without errors
+#' @description
+#' The function gets a vector of .R file names and returns for each of them if it can be sourced or not.
+#' This is helpful as an initial step before checking the homework (to make sure it can be loaded).
+#' @param files a charachter vector of R file names to be sourced and checked if they can be run with no problem.
+#' @param ... not used.
+#' @return
+#' A data.frame with the name of the file, it's status (TRUE if was sourced properly, and FALSE otherwise),
+#' and a note indicating possible issues.
 #' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @rdname can_source <- function(files, ...) {
+#' @rdname can_source
 #' @export
 can_source <- function(files, ...) {
   # find any errors...
@@ -403,35 +404,36 @@ can_source <- function(files, ...) {
 }
 
 
-#' @param files - a charachter vector of file names
-#' @return only files which are R/r files.
-#'
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param files PARAM_DESCRIPTION
+
+#' @title Get only .R files
+#' @description
+#' Give a vector of possible file names, returns only the ones that are .R files.
+#' @param files - a charachter vector of file names
 #' @param case_sensitive PARAM_DESCRIPTION, Default: FALSE
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @return only files which are R/r files.
 #' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
+#'
+#' files <- c("a", "b.R", "c.RR", "d.Rdata", "e.R")
+#' only_R_files(files)
+#'
 #' @seealso
 #'  \code{\link[tools]{file_ext}}
-#' @rdname only_R_files <- function(files, case_sensitive = FALSE) {
+#' @rdname file_ext_to_keep
 #' @export
 #' @importFrom tools file_ext
-only_R_files <- function(files, case_sensitive = FALSE) {
+file_ext_to_keep <- function(files, file_ext = c("R"), case_sensitive = FALSE) {
   files_ext <- tools::file_ext(files)
   if (!case_sensitive) files_ext <- toupper(files_ext)
-  files[files_ext == "R"]
+  files[files_ext %in% file_ext]
 }
 
 
-
+#' @rdname file_ext_to_keep
+#' @export
+only_R_files<- function(files, case_sensitive = FALSE) {
+  file_ext_to_keep(files = files, file_ext = "R", case_sensitive = case_sensitive)
+}
 
 
 
@@ -451,7 +453,7 @@ only_R_files <- function(files, case_sensitive = FALSE) {
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @rdname create_grade_files <- function(results, HW_number, tests_to_run,
+#' @rdname create_grade_files
 #' @export
 create_grade_files <- function(results, HW_number, tests_to_run, grades_folder = "grades\\", char_to_trim = 6) {
   results2 <- results
@@ -496,18 +498,23 @@ create_grade_files <- function(results, HW_number, tests_to_run, grades_folder =
 
 
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param file PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @title Help catch copycats
+#' @description
+#' Takes a vector of .R files which includes solutions to homework
+#' and adds 7 trailing spaces to each even line in the file.
+#' This way, if the next semester you get homework which includes such a line,
+#' it is clear that the student copied these homework from a solution another student
+#' gave him from a previous year.
+#' @param file an .R file to update.
+#' @return
+#' invisible TRUE. Also modifies the .R file that was in the input.
 #' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @rdname trap_copycats <- function(file) {
+#' @rdname trap_copycats
 #' @export
 trap_copycats <- function(file) {
   if (!file.exists(file)) return(invisible(FALSE))
@@ -529,7 +536,7 @@ trap_copycats <- function(file) {
 
 #
 #
-# # I'm making sure this will be run everytime so that Yarden will get to use it automatically on each new solution...
+# # I'm making sure this will be run everytime so that
 #
 # for(i in 1:9) {
 #   trap_copycats(paste0("sol\\HW_0",i,"_sol.R"))
