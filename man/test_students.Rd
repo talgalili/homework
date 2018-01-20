@@ -10,25 +10,30 @@ test_students(hw_submitters, sol_file, tests_to_run, student_id_fun = NULL,
   0.01, check.attributes = FALSE)) })
 }
 \arguments{
-\item{hw_submitters}{PARAM_DESCRIPTION}
+\item{hw_submitters}{a vector of .R files to check}
 
-\item{sol_file}{PARAM_DESCRIPTION}
+\item{sol_file}{the location of the .R file with the correct solution}
 
-\item{tests_to_run}{PARAM_DESCRIPTION}
+\item{tests_to_run}{a list of length 5 (one for each of the 5 questions)
+each element is itself a list with the inputs to check on the functions}
 
-\item{student_id_fun}{PARAM_DESCRIPTION, Default: NULL}
+\item{student_id_fun}{a character string indicating the name of the function a student was instructed to create that returns is id (for example my_id() {"id number"})
+If NULL, then the file name is used.}
 
 \item{timeout}{PARAM_DESCRIPTION, Default: 0.5}
 
-\item{use_do.call}{PARAM_DESCRIPTION}
+\item{use_do.call}{if to force the use of do.call on the list_of_inputs. By default is not set, in which case the function will try to guess if to use it or not (based on the solution by the teacher and the arguments in the list_of_inputs)}
 
-\item{check_sol_fun}{PARAM_DESCRIPTION, Default:
-function(student_sol, teacher_sol) {
-  isTRUE(all.equal(
-    student_sol, teacher_sol, tolerance = 0.01,
-    check.attributes = FALSE
-  ))
-}}
+\item{check_sol_fun}{the function to use to compare the solutions. if you wish to set a specific function for a test, the
+"check_sol_fun" attribute should be added to that test in the list.
+attr(current_test, "check_sol_fun")
+PARAM_DESCRIPTION, Default:
+            function(student_sol, teacher_sol) {
+              isTRUE(all.equal(
+                student_sol, teacher_sol, tolerance = 0.01,
+                check.attributes = FALSE
+              ))
+            }}
 }
 \value{
 OUTPUT_DESCRIPTION

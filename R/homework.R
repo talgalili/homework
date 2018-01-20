@@ -65,31 +65,21 @@ source_to_env <- function(file, env_name) {
 
 
 
-# hw_submitters - a vector of .R files to check
-# sol_file - the location of the .R file with the correct solution
-# list_of_inputs - a list of length 5 (one for each of the 5 questions)
-#                 each element is itself a list with the inputs to check on the functions
-# timeout - A numeric specifying the maximum number of seconds the expression is allowed to run before being interrupted by the timeout.
-# student_id_fun - a character string indicating the name of the function a student was instructed to create that returns is id (for example my_id() {"id number"})
-#                 If NULL, then the file name is used.
-# use_do.call - if to force the use of do.call on the list_of_inputs. By default is not set, in which case the function will try to guess if to use it or not (based on the solution by the teacher and the arguments in the list_of_inputs)
-# check_sol_fun - the function to use to compare the solutions. if you wish to set a specific function for a test, the
-#           "check_sol_fun" attribute should be added to that test in the list.
-#           attr(current_test, "check_sol_fun")
-
-
-
-
 
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
-#' @param hw_submitters PARAM_DESCRIPTION
-#' @param sol_file PARAM_DESCRIPTION
-#' @param tests_to_run PARAM_DESCRIPTION
-#' @param student_id_fun PARAM_DESCRIPTION, Default: NULL
+#' @param hw_submitters a vector of .R files to check
+#' @param sol_file the location of the .R file with the correct solution
+#' @param tests_to_run a list of length 5 (one for each of the 5 questions)
+#'                 each element is itself a list with the inputs to check on the functions
+#' @param student_id_fun a character string indicating the name of the function a student was instructed to create that returns is id (for example my_id() {"id number"})
+#'                 If NULL, then the file name is used.
 #' @param timeout PARAM_DESCRIPTION, Default: 0.5
-#' @param use_do.call PARAM_DESCRIPTION
-#' @param check_sol_fun PARAM_DESCRIPTION, Default:
+#' @param use_do.call if to force the use of do.call on the list_of_inputs. By default is not set, in which case the function will try to guess if to use it or not (based on the solution by the teacher and the arguments in the list_of_inputs)
+#' @param check_sol_fun the function to use to compare the solutions. if you wish to set a specific function for a test, the
+#'           "check_sol_fun" attribute should be added to that test in the list.
+#'           attr(current_test, "check_sol_fun")
+#'           PARAM_DESCRIPTION, Default:
 #'                       function(student_sol, teacher_sol) {
 #'                         isTRUE(all.equal(
 #'                           student_sol, teacher_sol, tolerance = 0.01,
