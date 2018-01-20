@@ -21,8 +21,10 @@ So if the homework said to create a function called fo then the list will contai
 The "fo" element will itself be a list with the inputs to check on the functions.
 If the input is NA then the function will be run as `fo()`.`
 If the function fo includes several parameters (say fo(a = "something", b = "another smthng")) then
-each element inside "fo" will be a list of the form list(a = "input", b = "b input"). The function do.call will be used to run this
-input in fo.}
+each element inside "fo" will be a list of the form list("input", "b input"). (you can also use
+list(a = "input", b = "b input") but then if the student wrote the function as function(A="not a", B = "not b")
+then his function would fail. Indicating the input just by the order makes it simpler).
+The function do.call will be used to run this input in fo.}
 
 \item{student_id_fun}{a character string indicating the name of the function a student was instructed to create that returns is id (for example my_id() {"id number"})
 If NULL, then the file name is used.}
