@@ -67,14 +67,19 @@ source_to_env <- function(file, env_name, envir_home = .GlobalEnv) {
 #' @return
 #' The original function, just with a different arg.
 #' @examples
-#' fo <- function(y, ...) {}
-#' fo
-#' fo_x <- change_first_arg_in_fun(fo, "x")
-#' fo_x
-#' @rdname change_first_arg_in_fun
+#' fo <- function(y, ...) {
+#'   x+3
+#' }
+#' # fo(x=5) # errors...
+#' fo_x <- fix_first_arg_in_fun(fo, "x")
+#' fo_x(x=5)
+#' @rdname fix_first_arg_in_fun
 #' @export
-change_first_arg_in_fun <- function(fun, first_arg = x) {
-  names(formals(fun))[1] <- first_arg
+fix_first_arg_in_fun <- function(fun, first_arg = "x") {
+  n_Args <- length(formals(fun))
+  formals(fun)[first_arg] <- NA
+  # formals(fun)
+  formals(fun)[[1]] <- as.name(first_arg)
   fun
 }
 
@@ -120,7 +125,7 @@ change_first_arg_in_fun <- function(fun, first_arg = x) {
 #' this is when the teachers write fo <- function(x) {...}
 #' And the student writes fo <- function(y) {...}
 #' we can make sure to fix the student's mistake using:
-#' function(f) change_first_arg_in_fun(f, "x")
+#' function(f) fix_first_arg_in_fun(f, "x")
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples

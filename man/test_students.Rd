@@ -50,7 +50,7 @@ PARAM_DESCRIPTION, Default:
 this is when the teachers write fo <- function(x) {...}
 And the student writes fo <- function(y) {...}
 we can make sure to fix the student's mistake using:
-function(f) change_first_arg_in_fun(f, "x")}
+function(f) fix_first_arg_in_fun(f, "x")}
 }
 \value{
 OUTPUT_DESCRIPTION
