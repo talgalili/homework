@@ -58,6 +58,25 @@ source_to_env <- function(file, env_name, envir_home = .GlobalEnv) {
 #
 
 
+#' @title Change the first argument of a function
+#' @description
+#' Useful when the teacher uses a function like function(x) and the student
+#' does something like function(X) or function(y)
+#' @param fun the function to change
+#' @param first_arg the name of the first argument of the function to return, Default: x
+#' @return
+#' The original function, just with a different arg.
+#' @examples
+#' fo <- function(y, ...) {}
+#' fo
+#' fo_x <- change_first_arg_in_fun(fo, "x")
+#' fo_x
+#' @rdname change_first_arg_in_fun
+#' @export
+change_first_arg_in_fun <- function(fun, first_arg = x) {
+  names(formals(fun))[1] <- first_arg
+  fun
+}
 
 
 # ------ Function to check student vs teacher answers
@@ -95,6 +114,13 @@ source_to_env <- function(file, env_name, envir_home = .GlobalEnv) {
 #'                           check.attributes = FALSE
 #'                         ))
 #'                       }
+#' @param update_student_fun the function to use on the student's function to fix a problem.
+#'           "update_student_fun" attribute can be added to that test in the list.
+#'           default is NULL.
+#' this is when the teachers write fo <- function(x) {...}
+#' And the student writes fo <- function(y) {...}
+#' we can make sure to fix the student's mistake using:
+#' function(f) change_first_arg_in_fun(f, "x")
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -112,7 +138,8 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
                           use_do.call,
                           check_sol_fun = function(student_sol, teacher_sol) {
                             isTRUE(all.equal(student_sol, teacher_sol, tolerance = 1e-2, check.attributes = FALSE))
-                          }) {
+                          },
+                          update_student_fun = NULL) {
 
   # clear old error files
   errors_files <- list.files("grades")
@@ -211,8 +238,13 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
       # And the student writes fo <- function(y) {...}
       # we can make sure to fix the student's mistake
       if ("update_student_fun" %in% current_test_attr) {
-        fun_student <- attr(teachers_tests, "update_student_fun")(fun_student)
+        update_student_fun <- attr(teachers_tests, "update_student_fun")
       }
+
+      if (!is.null(update_student_fun)) {
+        fun_student <- update_student_fun(fun_student)
+      }
+
 
       for (i_tests in teachers_tests_seq) {
         # teachers_tests = tests_to_run

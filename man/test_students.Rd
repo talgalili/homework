@@ -7,7 +7,7 @@
 test_students(hw_submitters, sol_file, tests_to_run, student_id_fun = NULL,
   timeout = 0.5, use_do.call, check_sol_fun = function(student_sol,
   teacher_sol) {     isTRUE(all.equal(student_sol, teacher_sol, tolerance =
-  0.01, check.attributes = FALSE)) })
+  0.01, check.attributes = FALSE)) }, update_student_fun = NULL)
 }
 \arguments{
 \item{hw_submitters}{a vector of .R files to check}
@@ -43,6 +43,14 @@ PARAM_DESCRIPTION, Default:
                 check.attributes = FALSE
               ))
             }}
+
+\item{update_student_fun}{the function to use on the student's function to fix a problem.
+          "update_student_fun" attribute can be added to that test in the list.
+          default is NULL.
+this is when the teachers write fo <- function(x) {...}
+And the student writes fo <- function(y) {...}
+we can make sure to fix the student's mistake using:
+function(f) change_first_arg_in_fun(f, "x")}
 }
 \value{
 OUTPUT_DESCRIPTION
