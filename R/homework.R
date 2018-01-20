@@ -75,7 +75,7 @@ source_to_env <- function(file, env_name, envir_home = .GlobalEnv) {
 #' Each element in the list is named by the name of the function.
 #' So if the homework said to create a function called fo then the list will contain an element named "fo".
 #' The "fo" element will itself be a list with the inputs to check on the functions.
-#' If the input is NULL then the function will be run as `fo()`.`
+#' If the input is NA then the function will be run as `fo()`.`
 #' If the function fo includes several parameters (say fo(a = "something", b = "another smthng")) then
 #' each element inside "fo" will be a list of the form list(a = "input", b = "b input"). The function do.call will be used to run this
 #' input in fo.
@@ -202,7 +202,7 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
       # get("q3", envir = .student_env)
 
       teachers_tests <- tests_to_run[[i_fun]]
-      teachers_tests_seq <- if (is.null(teachers_tests)) 1 else seq_along(teachers_tests)
+      teachers_tests_seq <- if (all(is.na(teachers_tests))) 1 else seq_along(teachers_tests)
 
       for (i_tests in teachers_tests_seq) {
         # teachers_tests = tests_to_run
@@ -233,7 +233,7 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
           try({
             # if(is.list(current_test) && length(current_test) > 1) {
 
-            if (is.null(current_test)) {
+            if (is.na(current_test)) {
               student_sol <- fun_student()
               teacher_sol <- fun_teacher()
             } else {

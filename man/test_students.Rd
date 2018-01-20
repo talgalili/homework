@@ -19,7 +19,7 @@ This file should have the functions that solves the homework's questions.}
 Each element in the list is named by the name of the function.
 So if the homework said to create a function called fo then the list will contain an element named "fo".
 The "fo" element will itself be a list with the inputs to check on the functions.
-If the input is NULL then the function will be run as `fo()`.`
+If the input is NA then the function will be run as `fo()`.`
 If the function fo includes several parameters (say fo(a = "something", b = "another smthng")) then
 each element inside "fo" will be a list of the form list(a = "input", b = "b input"). The function do.call will be used to run this
 input in fo.}

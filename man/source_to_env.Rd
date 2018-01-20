@@ -4,12 +4,14 @@
 \alias{source_to_env}
 \title{Loads sources function into an envir}
 \usage{
-source_to_env(file, env_name)
+source_to_env(file, env_name, envir_home = .GlobalEnv)
 }
 \arguments{
 \item{file}{the location of the .R file to source.}
 
 \item{env_name}{A name for the envir in which to store the data.}
+
+\item{envir_home}{the environment into which to assign the object (env_name). The default is .GlobalEnv.}
 }
 \value{
 A named environment with the content of the .R file
