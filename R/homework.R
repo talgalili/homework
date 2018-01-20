@@ -15,6 +15,7 @@
 #' Sources an R file to get its functions and content into the environment.
 #' @param file the location of the .R file to source.
 #' @param env_name A name for the envir in which to store the data.
+#' @param envir_home the environment into which to assign the object (env_name). The default is .GlobalEnv.
 #' @return A named environment with the content of the .R file
 #' @examples
 #' \dontrun{
@@ -23,14 +24,13 @@
 #'  }
 #' }
 #' @export
-source_to_env <- function(file, env_name) {
-  assign(env_name, new.env(), envir = .GlobalEnv) # create a new mystical env
-  source(file, local = get(env_name, envir = .GlobalEnv)) # brings all the functions to the local env created by the function
+source_to_env <- function(file, env_name, envir_home = .GlobalEnv) {
+  assign(env_name, new.env(), envir = envir_home) # create a new mystical env
+  source(file, local = get(env_name, envir = envir_home)) # brings all the functions to the local env created by the function
 }
 
 
-
-# "teacher_env"
+# ".teacher_env"
 
 #
 # create_solutions <- function(file) {
@@ -39,16 +39,16 @@ source_to_env <- function(file, env_name) {
 #   # fun_vec <- as.vector(lsf.str())
 #   #
 #   #
-#   # assign("teacher_env", new.env(), envir = .GlobalEnv) # create a new mystical env
+#   # assign(".teacher_env", new.env(), envir = .GlobalEnv) # create a new mystical env
 #   #
 #   # for(i in fun_vec) {
 #   #   # assign(paste0(i,"s"), get(i),  envir = .GlobalEnv)
-#   #   assign(i, get(i),  envir = teacher_env)
+#   #   assign(i, get(i),  envir = .teacher_env)
 #   # }
 #
 #
-#   assign("teacher_env", new.env(), envir = .GlobalEnv) # create a new mystical env
-#   source(file, local = teacher_env) # brings all the functions to the local env created by the function
+#   assign(".teacher_env", new.env(), envir = .GlobalEnv) # create a new mystical env
+#   source(file, local = .teacher_env) # brings all the functions to the local env created by the function
 #
 #   NULL
 #
@@ -126,10 +126,10 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
 
   # get teacher's solutions
   # create_solutions(sol_file)
-  # lsf.str(envir = teacher_env)
+  # lsf.str(envir = .teacher_env)
 
-  source_to_env(file = sol_file, env_name = "teacher_env")
-  # lsf.str(envir = teacher_env)
+  source_to_env(file = sol_file, env_name = ".teacher_env")
+  # lsf.str(envir = .teacher_env)
   #
 
   functions_to_check <- names(tests_to_run)
@@ -143,17 +143,17 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
     # rm(list=as.vector(lsf.str())[-1]) # -1 so to not remove "create_solutions"
 
 
-    # if (exists("student_env")) rm(student_env)
-    student_env <- NULL
-
+    # if (exists(".student_env")) rm(.student_env)
+    assign(".student_env", NULL, envir = .GlobalEnv)
 
 
     # get student's functions
     # try(source(hw_submitters[i]), silent = TRUE)
-    try(source_to_env(file = hw_submitters[i], env_name = "student_env"), silent = TRUE)
+    try(source_to_env(file = hw_submitters[i], env_name = ".student_env" ),
+        silent = TRUE)
 
-    # if (!exists("student_env")) next # skip current file as the source failed...
-    if(is.null(student_env)) next
+    # if (!exists(".student_env")) next # skip current file as the source failed...
+    if(is.null(.student_env)) next
 
 
     if (is.null(student_id_fun)) {
@@ -162,11 +162,11 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
       grades[i, 1] <- basename(hw_submitters[i]) # gets the filename
       current_id <- grades[i, 1]
     } else {
-      # # lsf.str(envir = student_env)
+      # # lsf.str(envir = .student_env)
       # moved to using the file name.
       # ls()
       # lsf.str()
-      try(my_id <- get(student_id_fun, envir = student_env), silent = TRUE)
+      try(my_id <- get(student_id_fun, envir = .student_env), silent = TRUE)
       if (!exists("my_id")) next # skip current file since we don't have the my_id function!
       try(grades[i, 1] <- my_id(), silent = TRUE)
       current_id <- grades[i, 1]
@@ -179,29 +179,30 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
     for (i_fun in functions_to_check) {
       fun_to_get <- i_fun
 
-      fun_teacher <- if (exists(fun_to_get, envir = teacher_env)) {
-        get(fun_to_get, envir = teacher_env)
+      fun_teacher <- if (exists(fun_to_get, envir = .teacher_env)) {
+        get(fun_to_get, envir = .teacher_env)
       } else {
         function(...) {
           print("This function was missing!")
         }
       }
 
-      fun_student <- if (exists(fun_to_get, envir = student_env)) {
-        get(fun_to_get, envir = student_env)
+      fun_student <- if (exists(fun_to_get, envir = .student_env)) {
+        get(fun_to_get, envir = .student_env)
       } else {
         function(...) {
           print("This function was missing!")
         }
       }
 
-      # fun_student <- get(paste0("q", i_question), envir = student_env)
+      # fun_student <- get(paste0("q", i_question), envir = .student_env)
 
-      # get("q3", envir = student_env)
+      # get("q3", envir = .student_env)
 
       teachers_tests <- tests_to_run[[i_fun]]
+      teachers_tests_seq <- if(is.null(teachers_tests)) 1 else seq_along(teachers_tests)
 
-      for (i_tests in seq_along(teachers_tests)) {
+      for (i_tests in teachers_tests_seq) {
         # teachers_tests = tests_to_run
         # i_tests = 2
         current_test <- teachers_tests[[i_tests]]
@@ -328,6 +329,12 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
 
   grades[, "grade"] <- hw_grades
   # grades["question_difficulty",] <- question_difficulty
+
+
+  # clean the .GlobalEnv
+  rm(.student_env, envir = .GlobalEnv)
+  rm(.teacher_env, envir = .GlobalEnv)
+
 
   grades
 }
