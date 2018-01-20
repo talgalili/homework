@@ -204,12 +204,20 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
       teachers_tests <- tests_to_run[[i_fun]]
       teachers_tests_seq <- if (all(is.na(teachers_tests))) 1 else seq_along(teachers_tests)
 
+
+      current_test_attr <- names(attributes(teachers_tests))
+
+      # this is when the teachers write fo <- function(x) {...}
+      # And the student writes fo <- function(y) {...}
+      # we can make sure to fix the student's mistake
+      if ("update_student_fun" %in% current_test_attr) {
+        fun_student <- attr(teachers_tests, "update_student_fun")(fun_student)
+      }
+
       for (i_tests in teachers_tests_seq) {
         # teachers_tests = tests_to_run
         # i_tests = 2
         current_test <- teachers_tests[[i_tests]]
-        current_test_attr <- names(attributes(teachers_tests))
-
 
         student_sol <- "The function didn't complete"
         teacher_sol <- "The student's function didn't complete"
