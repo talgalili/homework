@@ -69,12 +69,21 @@ source_to_env <- function(file, env_name) {
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
 #' @param hw_submitters a vector of .R files to check
-#' @param sol_file the location of the .R file with the correct solution
-#' @param tests_to_run a list of length 5 (one for each of the 5 questions)
-#'                 each element is itself a list with the inputs to check on the functions
+#' @param sol_file the location of the .R file with the correct solution.
+#' This file should have the functions that solves the homework's questions.
+#' @param tests_to_run a list with elements as the number of questions in the homework assignment.
+#' Each element in the list is named by the name of the function.
+#' So if the homework said to create a function called fo then the list will contain an element named "fo".
+#' The "fo" element will itself be a list with the inputs to check on the functions.
+#' If the input is NULL then the function will be run as `fo()`.`
+#' If the function fo includes several parameters (say fo(a = "something", b = "another smthng")) then
+#' each element inside "fo" will be a list of the form list(a = "input", b = "b input"). The function do.call will be used to run this
+#' input in fo.
 #' @param student_id_fun a character string indicating the name of the function a student was instructed to create that returns is id (for example my_id() {"id number"})
 #'                 If NULL, then the file name is used.
-#' @param timeout PARAM_DESCRIPTION, Default: 0.5
+#' @param timeout The number of seconds to wait for the function to end before deciding
+#' the student got into an infinite loop and to exist the function and declare the student failed to answer
+#' the question. Default: 0.5
 #' @param use_do.call if to force the use of do.call on the list_of_inputs. By default is not set, in which case the function will try to guess if to use it or not (based on the solution by the teacher and the arguments in the list_of_inputs)
 #' @param check_sol_fun the function to use to compare the solutions. if you wish to set a specific function for a test, the
 #'           "check_sol_fun" attribute should be added to that test in the list.
@@ -95,6 +104,7 @@ source_to_env <- function(file, env_name) {
 #'  }
 #' }
 #' @rdname test_students
+#' @importFrom R.utils withTimeout
 #' @export
 test_students <- function(hw_submitters, sol_file, tests_to_run,
                           student_id_fun = NULL, # my_id
@@ -103,8 +113,6 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
                           check_sol_fun = function(student_sol, teacher_sol) {
                             isTRUE(all.equal(student_sol, teacher_sol, tolerance = 1e-2, check.attributes = FALSE))
                           }) {
-
-
 
   # clear old error files
   errors_files <- list.files("grades")
@@ -220,15 +228,22 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
         R.utils::withTimeout({
           try({
             # if(is.list(current_test) && length(current_test) > 1) {
-            if (is.list(current_test) && use_do.call) {
-              # then we must be having to use a function with several arguments
-              student_sol <- do.call(fun_student, current_test)
-              teacher_sol <- do.call(fun_teacher, current_test)
+
+            if(is.null(current_test)) {
+              student_sol <- fun_student()
+              teacher_sol <- fun_teacher()
             } else {
-              # it is a simple function with only one argument
-              student_sol <- fun_student(current_test)
-              teacher_sol <- fun_teacher(current_test)
+              if (is.list(current_test) && use_do.call) {
+                # then we must be having to use a function with several arguments
+                student_sol <- do.call(fun_student, current_test)
+                teacher_sol <- do.call(fun_teacher, current_test)
+              } else {
+                # it is a simple function with only one argument
+                student_sol <- fun_student(current_test)
+                teacher_sol <- fun_teacher(current_test)
+              }
             }
+
           }, silent = TRUE)
         }, timeout = timeout, onTimeout = "warning")
 

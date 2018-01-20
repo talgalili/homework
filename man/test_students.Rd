@@ -12,15 +12,24 @@ test_students(hw_submitters, sol_file, tests_to_run, student_id_fun = NULL,
 \arguments{
 \item{hw_submitters}{a vector of .R files to check}
 
-\item{sol_file}{the location of the .R file with the correct solution}
+\item{sol_file}{the location of the .R file with the correct solution.
+This file should have the functions that solves the homework's questions.}
 
-\item{tests_to_run}{a list of length 5 (one for each of the 5 questions)
-each element is itself a list with the inputs to check on the functions}
+\item{tests_to_run}{a list with elements as the number of questions in the homework assignment.
+Each element in the list is named by the name of the function.
+So if the homework said to create a function called fo then the list will contain an element named "fo".
+The "fo" element will itself be a list with the inputs to check on the functions.
+If the input is NULL then the function will be run as `fo()`.`
+If the function fo includes several parameters (say fo(a = "something", b = "another smthng")) then
+each element inside "fo" will be a list of the form list(a = "input", b = "b input"). The function do.call will be used to run this
+input in fo.}
 
 \item{student_id_fun}{a character string indicating the name of the function a student was instructed to create that returns is id (for example my_id() {"id number"})
 If NULL, then the file name is used.}
 
-\item{timeout}{PARAM_DESCRIPTION, Default: 0.5}
+\item{timeout}{The number of seconds to wait for the function to end before deciding
+the student got into an infinite loop and to exist the function and declare the student failed to answer
+the question. Default: 0.5}
 
 \item{use_do.call}{if to force the use of do.call on the list_of_inputs. By default is not set, in which case the function will try to guess if to use it or not (based on the solution by the teacher and the arguments in the list_of_inputs)}
 

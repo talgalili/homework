@@ -9,7 +9,8 @@ Description: This package aims to help teachers of R courses (especially when te
 Depends:
     R (>= 3.0.0)
 Imports:
-    tools
+    tools,
+    R.utils
 Suggests:
     knitr,
     covr,
