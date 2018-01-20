@@ -237,12 +237,13 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
       # this is when the teachers write fo <- function(x) {...}
       # And the student writes fo <- function(y) {...}
       # we can make sure to fix the student's mistake
-      if ("update_student_fun" %in% current_test_attr) {
-        update_student_fun <- attr(teachers_tests, "update_student_fun")
-      }
-
       if (!is.null(update_student_fun)) {
+        # a general fix to all questions
         fun_student <- update_student_fun(fun_student)
+      }
+      if ("update_student_fun" %in% current_test_attr) {
+        # a specific fix to only one q
+        fun_student <- attr(teachers_tests, "update_student_fun")(fun_student)
       }
 
 
@@ -273,7 +274,7 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
           try({
             # if(is.list(current_test) && length(current_test) > 1) {
 
-            if (is.na(current_test)) {
+            if (is.na(current_test[1])) {
               student_sol <- fun_student()
               teacher_sol <- fun_teacher()
             } else {
