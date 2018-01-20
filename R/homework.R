@@ -149,11 +149,13 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
 
     # get student's functions
     # try(source(hw_submitters[i]), silent = TRUE)
-    try(source_to_env(file = hw_submitters[i], env_name = ".student_env" ),
-        silent = TRUE)
+    try(
+      source_to_env(file = hw_submitters[i], env_name = ".student_env"),
+      silent = TRUE
+    )
 
     # if (!exists(".student_env")) next # skip current file as the source failed...
-    if(is.null(.student_env)) next
+    if (is.null(.student_env)) next
 
 
     if (is.null(student_id_fun)) {
@@ -200,7 +202,7 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
       # get("q3", envir = .student_env)
 
       teachers_tests <- tests_to_run[[i_fun]]
-      teachers_tests_seq <- if(is.null(teachers_tests)) 1 else seq_along(teachers_tests)
+      teachers_tests_seq <- if (is.null(teachers_tests)) 1 else seq_along(teachers_tests)
 
       for (i_tests in teachers_tests_seq) {
         # teachers_tests = tests_to_run
@@ -231,7 +233,7 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
           try({
             # if(is.list(current_test) && length(current_test) > 1) {
 
-            if(is.null(current_test)) {
+            if (is.null(current_test)) {
               student_sol <- fun_student()
               teacher_sol <- fun_teacher()
             } else {
@@ -245,7 +247,6 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
                 teacher_sol <- fun_teacher(current_test)
               }
             }
-
           }, silent = TRUE)
         }, timeout = timeout, onTimeout = "warning")
 
@@ -444,7 +445,7 @@ file_ext_to_keep <- function(files, file_ext = c("R"), case_sensitive = FALSE) {
 
 #' @rdname file_ext_to_keep
 #' @export
-only_R_files<- function(files, case_sensitive = FALSE) {
+only_R_files <- function(files, case_sensitive = FALSE) {
   file_ext_to_keep(files = files, file_ext = "R", case_sensitive = case_sensitive)
 }
 
