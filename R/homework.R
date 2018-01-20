@@ -143,7 +143,8 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
     # rm(list=as.vector(lsf.str())[-1]) # -1 so to not remove "create_solutions"
 
 
-    if (exists("student_env")) rm(student_env)
+    # if (exists("student_env")) rm(student_env)
+    student_env <- NULL
 
 
 
@@ -151,8 +152,8 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
     # try(source(hw_submitters[i]), silent = TRUE)
     try(source_to_env(file = hw_submitters[i], env_name = "student_env"), silent = TRUE)
 
-    if (!exists("student_env")) next # skip current file as the source failed...
-
+    # if (!exists("student_env")) next # skip current file as the source failed...
+    if(is.null(student_env)) next
 
 
     if (is.null(student_id_fun)) {
