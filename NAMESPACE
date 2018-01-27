@@ -3,6 +3,7 @@
 export(can_source)
 export(create_grade_files)
 export(file_ext_to_keep)
+export(find_copycats)
 export(fix_first_arg_in_fun)
 export(only_R_files)
 export(source_to_env)

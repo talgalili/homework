@@ -77,7 +77,7 @@ source_to_env <- function(file, env_name, envir_home = .GlobalEnv) {
 #' @rdname fix_first_arg_in_fun
 #' @export
 fix_first_arg_in_fun <- function(fun, first_arg = "x") {
-  if(first_arg != names(formals(fun))[1]) {
+  if (first_arg != names(formals(fun))[1]) {
     # n_Args <- length(formals(fun))
     formals(fun)[first_arg] <- NA
     # formals(fun)
@@ -571,6 +571,9 @@ create_grade_files <- function(results, HW_number, tests_to_run, grades_folder =
 #' it is clear that the student copied these homework from a solution another student
 #' gave him from a previous year.
 #' @param file an .R file to update.
+#' @param show_print logical (TRUE) if to print the rows with the suspected extra spaces.
+#' @param ... not used
+#'
 #' @return
 #' invisible TRUE. Also modifies the .R file that was in the input.
 #' @examples
@@ -581,7 +584,7 @@ create_grade_files <- function(results, HW_number, tests_to_run, grades_folder =
 #' }
 #' @rdname trap_copycats
 #' @export
-trap_copycats <- function(file) {
+trap_copycats <- function(file, ...) {
   if (!file.exists(file)) return(invisible(FALSE))
 
   R_txt <- readLines(file)
@@ -597,6 +600,25 @@ trap_copycats <- function(file) {
   invisible(TRUE)
 }
 
+
+
+
+#' @rdname trap_copycats
+#' @export
+find_copycats <- function(file, show_print = TRUE, ...) {
+  if (!file.exists(file)) return(invisible(FALSE))
+
+  R_txt <- readLines(file)
+  # removing trailing spaces
+  # https://stackoverflow.com/questions/9532340/how-do-i-remove-trailing-whitespace-using-a-regular-expression
+  space_loc <- grepl("       $", R_txt)
+
+  if (any(space_loc)) {
+    if (show_print) print(R_txt[space_loc])
+    return(TRUE)
+  }
+  return(FALSE)
+}
 
 
 #

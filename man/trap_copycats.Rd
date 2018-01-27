@@ -2,12 +2,19 @@
 % Please edit documentation in R/homework.R
 \name{trap_copycats}
 \alias{trap_copycats}
+\alias{find_copycats}
 \title{Help catch copycats}
 \usage{
-trap_copycats(file)
+trap_copycats(file, ...)
+
+find_copycats(file, show_print = TRUE, ...)
 }
 \arguments{
 \item{file}{an .R file to update.}
+
+\item{...}{not used}
+
+\item{show_print}{logical (TRUE) if to print the rows with the suspected extra spaces.}
 }
 \value{
 invisible TRUE. Also modifies the .R file that was in the input.
