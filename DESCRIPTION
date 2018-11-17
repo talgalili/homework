@@ -16,7 +16,7 @@ Suggests:
     covr,
     testthat
 VignetteBuilder: knitr
-License: GPL-2 | GPL-3
+License: GPL-3 + file LICENSE
 URL: https://cran.r-project.org/package=homework,
     https://github.com/talgalili/homework/,
     https://www.r-statistics.com/tag/homework/
