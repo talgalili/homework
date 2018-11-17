@@ -344,7 +344,7 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
         if (!is_correct_answer) {
           # then - save the function and test to a file, so that the TA could more easily check it.
           # mistakes_file <- paste0(sol_file, "_students_errors.R")
-          txt_fun_student <- capture.output(fun_student)
+          txt_fun_student <- capture.output(dput(fun_student))
           txt_current_test <- capture.output(current_test)
           txt_teacher_sol <- capture.output(teacher_sol)
           txt_student_sol <- capture.output(student_sol)
