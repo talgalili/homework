@@ -143,7 +143,7 @@ fix_first_arg_in_fun <- function(fun, first_arg = "x") {
 #' @importFrom R.utils withTimeout
 #' @export
 test_students <- function(hw_submitters, sol_file, tests_to_run,
-                          student_id_fun = NULL, # my_id
+                          # student_id_fun = NULL, # my_id
                           timeout = .5,
                           use_do.call,
                           check_sol_fun = function(student_sol, teacher_sol) {
@@ -194,26 +194,27 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
       silent = TRUE
     )
 
+
+    # if (is.null(student_id_fun)) {
+    #   # use file name
+    #   # https://stackoverflow.com/questions/2548815/find-file-name-from-full-file-path
+    #   grades[i, 1] <- basename(hw_submitters[i]) # gets the filename
+    #   current_id <- grades[i, 1]
+    # } else {
+    #   # # lsf.str(envir = .student_env)
+    #   # moved to using the file name.
+    #   # ls()
+    #   # lsf.str()
+    #   try(my_id <- get(student_id_fun, envir = .student_env), silent = TRUE)
+    #   if (!exists("my_id")) next # skip current file since we don't have the my_id function!
+    #   try(grades[i, 1] <- my_id(), silent = TRUE)
+    #   current_id <- grades[i, 1]
+    # }
+    grades[i, 1] <- basename(hw_submitters[i]) # gets the filename
+    current_id <- grades[i, 1]
+
     # if (!exists(".student_env")) next # skip current file as the source failed...
     if (length(.student_env) == 0) next
-
-
-    if (is.null(student_id_fun)) {
-      # use file name
-      # https://stackoverflow.com/questions/2548815/find-file-name-from-full-file-path
-      grades[i, 1] <- basename(hw_submitters[i]) # gets the filename
-      current_id <- grades[i, 1]
-    } else {
-      # # lsf.str(envir = .student_env)
-      # moved to using the file name.
-      # ls()
-      # lsf.str()
-      try(my_id <- get(student_id_fun, envir = .student_env), silent = TRUE)
-      if (!exists("my_id")) next # skip current file since we don't have the my_id function!
-      try(grades[i, 1] <- my_id(), silent = TRUE)
-      current_id <- grades[i, 1]
-    }
-
 
 
 
