@@ -62,6 +62,7 @@ Some of the homework file have intentional problems in them to deomnstrate how t
 
 ``` r
 library(homework)
+# it is best to just create an RStudio project for the homework checking of a course...
 demo_base_dir <- file.path(system.file(package = "homework"), "extdata")
 demo_base_dir
 #> [1] "C:/R/library/homework/extdata"
