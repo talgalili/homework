@@ -11,9 +11,7 @@ An example of a folder structure before running check\_hw:
     -check_hw_master.R
     -hw01
     --submissions
-    ---01_123456.R
-    ---01_456987.R
-    ---01_879456.R
+    ---students_homework.zip (maybe from moodle)
     --hw01_solutions.R (includes the corrects functions and the inputs to check)
     --hw.txt/hw.pdf/hw.docx/etc. (ignored)
     -hw02
@@ -27,6 +25,7 @@ Folder structure AFTER running check\_hw:
     -check_hw_master.R
     -hw01
     --submissions
+    ---students_homework.zip (maybe from moodle)
     ---01_123456.R
     ---01_456987.R
     ---01_879456.R

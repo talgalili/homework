@@ -31,7 +31,8 @@ if(F) {
 
 
 #' @export
-create_grade_files <- function(grades, hw_sub_dir, grades_sub_dir = "grades", char_to_keep = 5, get_id_from_file_name = TRUE) {
+create_grade_files <- function(grades, hw_sub_dir, grades_sub_dir = "grades", char_to_keep = 5,
+                               get_id_from_file_name = TRUE) {
 
   grades_sub_dir <- file.path(hw_sub_dir, grades_sub_dir)
   if(dir.exists(grades_sub_dir)) {
@@ -65,6 +66,8 @@ create_grade_files <- function(grades, hw_sub_dir, grades_sub_dir = "grades", ch
 check_hw <- function(hw_sub_dir = "", base_dir = getwd(),
                      submissions_sub_dir = "submissions", sol_file, tests_to_run,
                      create_grade_files = TRUE,
+                     unzip_submissions = TRUE,
+                     submission_file_ext_to_keep = c("R", "zip"),
                      ...) {
   # if sol_file empty, find a file that includes the word "solutions"
   hw_sub_dir <- file.path(base_dir, hw_sub_dir)
@@ -100,6 +103,22 @@ check_hw <- function(hw_sub_dir = "", base_dir = getwd(),
 
 
   hw_submissions_files <- file.path(submissions_sub_dir, list.files(submissions_sub_dir))
+
+  if(unzip_submissions) {
+    # if the submissions folder has ANY zip files,
+    # it will extract it and remove all files that are not .zip and .R files
+    if(any(tools::file_ext(hw_submissions_files) %in% "zip")) {
+      zip_files <- hw_submissions_files[tools::file_ext(hw_submissions_files) %in% "zip"]
+      unzip(zip_files, exdir = submissions_sub_dir, junkpaths= TRUE) # extract all .R files
+
+      # remove all non R or zip files.
+      hw_submissions_files <- file.path(submissions_sub_dir, list.files(submissions_sub_dir))
+      to_keep <- tools::file_ext(hw_submissions_files) %in% submission_file_ext_to_keep
+      unlink(hw_submissions_files[!to_keep])
+    }
+  }
+
+
 
   # warning if some files could not be checked because they couldn't be sourced properly...
   check_if_can_source <- can_source(hw_submissions_files)
