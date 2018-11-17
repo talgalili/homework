@@ -226,15 +226,21 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
         get(fun_to_get, envir = .teacher_env, inherits = FALSE)
       } else {
         function(...) {
-          print("This function was missing!")
+          # i_tests will be defined later
+          # this is used so to not print a warning everytime a test is run.
+          if(i_tests == 1) warning("The function '",fun_to_get ,"' was not found in the solutions file!")
         }
       }
 
-      fun_student <- if (exists(fun_to_get, envir = .student_env, inherits = FALSE)) {
+      fun_student_exists <- exists(fun_to_get, envir = .student_env, inherits = FALSE)
+      fun_student <- if (fun_student_exists) {
         get(fun_to_get, envir = .student_env, inherits = FALSE)
       } else {
         function(...) {
-          print("This function was missing!")
+          if(i_tests == 1) {
+            warning("The function '",fun_to_get ,"' was not found in file: ", current_id)
+          }
+          return(paste0("The function '",fun_to_get ,"' was not found in file: ", current_id))
         }
       }
 
@@ -345,7 +351,11 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
         if (!is_correct_answer) {
           # then - save the function and test to a file, so that the TA could more easily check it.
           # mistakes_file <- paste0(sol_file, "_students_errors.R")
-          txt_fun_student <- capture.output(dput(fun_student))
+          txt_fun_student <- if(fun_student_exists) {
+              capture.output(dput(fun_student))
+            } else {
+              "# NULL! This function was not found in the student's .R file."
+            }
           txt_current_test <- capture.output(current_test)
           txt_teacher_sol <- capture.output(teacher_sol)
           txt_student_sol <- capture.output(student_sol)
