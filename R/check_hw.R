@@ -30,7 +30,26 @@ if(F) {
 
 
 
-#' @export
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param grades PARAM_DESCRIPTION
+#' @param hw_sub_dir PARAM_DESCRIPTION
+#' @param grades_sub_dir PARAM_DESCRIPTION, Default: 'grades'
+#' @param char_to_keep PARAM_DESCRIPTION, Default: 5
+#' @param get_id_from_file_name PARAM_DESCRIPTION, Default: TRUE
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[tools]{fileutils}}
+#' @rdname create_grade_files
+#' @export 
+#' @importFrom tools file_path_sans_ext
 create_grade_files <- function(grades, hw_sub_dir, grades_sub_dir = "grades", char_to_keep = 5,
                                get_id_from_file_name = TRUE) {
 
@@ -62,9 +81,54 @@ create_grade_files <- function(grades, hw_sub_dir, grades_sub_dir = "grades", ch
 
 
 
-#' @export
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param hw_sub_dir PARAM_DESCRIPTION, Default: ''
+#' @param base_dir PARAM_DESCRIPTION, Default: getwd()
+#' @param submissions_sub_dir PARAM_DESCRIPTION, Default: 'submissions'
+#' @param sol_file PARAM_DESCRIPTION
+#' @param tests_to_run PARAM_DESCRIPTION
+#' @param create_grade_files PARAM_DESCRIPTION, Default: TRUE
+#' @param unzip_submissions PARAM_DESCRIPTION, Default: TRUE
+#' @param submission_file_ext_to_keep PARAM_DESCRIPTION, Default: c("R", "zip")
+#' @param catch_copycats PARAM_DESCRIPTION, Default: TRUE
+#' @param max_grade PARAM_DESCRIPTION, Default: 100
+#' @param ... PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[tools]{fileutils}}
+#' @rdname check_hw
+#' @export 
+#' @importFrom tools file_ext
 check_hw <- function(hw_sub_dir = "", base_dir = getwd(),
                      submissions_sub_dir = "submissions", sol_file, tests_to_run,
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param grades PARAM_DESCRIPTION
+#' @param hw_sub_dir PARAM_DESCRIPTION
+#' @param grades_sub_dir PARAM_DESCRIPTION, Default: 'grades'
+#' @param char_to_keep PARAM_DESCRIPTION, Default: 5
+#' @param get_id_from_file_name PARAM_DESCRIPTION, Default: TRUE
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[tools]{fileutils}}
+#' @rdname create_grade_files
+#' @export 
+#' @importFrom tools file_path_sans_ext
                      create_grade_files = TRUE,
                      unzip_submissions = TRUE,
                      submission_file_ext_to_keep = c("R", "zip"),
