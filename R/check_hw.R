@@ -68,6 +68,7 @@ check_hw <- function(hw_sub_dir = "", base_dir = getwd(),
                      create_grade_files = TRUE,
                      unzip_submissions = TRUE,
                      submission_file_ext_to_keep = c("R", "zip"),
+                     catch_copycats = TRUE,
                      ...) {
   # if sol_file empty, find a file that includes the word "solutions"
   hw_sub_dir <- file.path(base_dir, hw_sub_dir)
@@ -137,6 +138,17 @@ check_hw <- function(hw_sub_dir = "", base_dir = getwd(),
                 )
 
   if(create_grade_files) create_grade_files(results, hw_sub_dir)
+
+  if(catch_copycats) {
+    # make sure the solution file we have will catch copycats in the future:
+    copycats_trap(sol_file)
+    # issue a warning if some student seems to have been cheating:
+    any_copycats <- sapply(hw_submissions_files, copycats_find)
+    if(any(any_copycats)) {
+      hw_submissions_files_cheaters <- hw_submissions_files[any_copycats]
+      for(i in hw_submissions_files_cheaters) warning("There are signs the following student cheated: ", i)
+    }
+  }
 
   results
 }
