@@ -17,7 +17,7 @@ my_pwr <- function(x, p) {
 
 tests_to_run <-
   list(
-    "my_sum" = list(1, 5, 1:5, 100:105),
+  "my_sum" = list(1, 5, 1:5, 100:105),
 	"my_pwr" = list(
 					list(x=5, p =1),
 					list(x=1:4, p =2),
@@ -25,3 +25,5 @@ tests_to_run <-
 					list(x=10:14, p =1/2)
 					)
   )
+
+
