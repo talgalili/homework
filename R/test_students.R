@@ -183,7 +183,7 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
     # rm(list=as.vector(lsf.str())[-1]) # -1 so to not remove "create_solutions"
 
 
-    # if (exists(".student_env")) rm(.student_env)
+    if (exists(".student_env")) rm(.student_env, envir = .GlobalEnv)
     assign(".student_env", NULL, envir = .GlobalEnv)
 
 
@@ -195,7 +195,7 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
     )
 
     # if (!exists(".student_env")) next # skip current file as the source failed...
-    if (is.null(.student_env)) next
+    if (length(.student_env) == 0) next
 
 
     if (is.null(student_id_fun)) {
@@ -221,16 +221,16 @@ test_students <- function(hw_submitters, sol_file, tests_to_run,
     for (i_fun in functions_to_check) {
       fun_to_get <- i_fun
 
-      fun_teacher <- if (exists(fun_to_get, envir = .teacher_env)) {
-        get(fun_to_get, envir = .teacher_env)
+      fun_teacher <- if (exists(fun_to_get, envir = .teacher_env, inherits = FALSE)) {
+        get(fun_to_get, envir = .teacher_env, inherits = FALSE)
       } else {
         function(...) {
           print("This function was missing!")
         }
       }
 
-      fun_student <- if (exists(fun_to_get, envir = .student_env)) {
-        get(fun_to_get, envir = .student_env)
+      fun_student <- if (exists(fun_to_get, envir = .student_env, inherits = FALSE)) {
+        get(fun_to_get, envir = .student_env, inherits = FALSE)
       } else {
         function(...) {
           print("This function was missing!")
