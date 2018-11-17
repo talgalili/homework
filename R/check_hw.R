@@ -69,6 +69,7 @@ check_hw <- function(hw_sub_dir = "", base_dir = getwd(),
                      unzip_submissions = TRUE,
                      submission_file_ext_to_keep = c("R", "zip"),
                      catch_copycats = TRUE,
+                     max_grade = 100,
                      ...) {
   # if sol_file empty, find a file that includes the word "solutions"
   hw_sub_dir <- file.path(base_dir, hw_sub_dir)
@@ -134,6 +135,7 @@ check_hw <- function(hw_sub_dir = "", base_dir = getwd(),
                 sol_file = sol_file,
                 tests_to_run = tests_to_run ,
                 mistakes_folder = file.path(hw_sub_dir, "mistakes"),
+                max_grade = max_grade,
                 ...
                 )
 
