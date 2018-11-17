@@ -535,7 +535,7 @@ only_R_files <- function(files, case_sensitive = FALSE) {
 #' }
 #' @rdname create_grade_files
 #' @export
-create_grade_files <- function(results, HW_number, tests_to_run, grades_folder = "grades\\", char_to_trim = 6) {
+create_grade_files_OLD <- function(results, HW_number, tests_to_run, grades_folder = "grades\\", char_to_trim = 6) {
   results2 <- results
   success_per_question <- round(colMeans(results2[, -1]), 2) # this includes the mean final grade
   results2 <- rbind(results2, c("Success", success_per_question))

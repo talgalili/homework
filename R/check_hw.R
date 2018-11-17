@@ -27,9 +27,44 @@ if(F) {
   undebug(test_students)
 }
 
+
+
+
+#' @export
+create_grade_files <- function(grades, hw_sub_dir, grades_sub_dir = "grades", char_to_keep = 5, get_id_from_file_name = TRUE) {
+
+  grades_sub_dir <- file.path(hw_sub_dir, grades_sub_dir)
+  if(dir.exists(grades_sub_dir)) {
+    # clear all grades files
+    unlink(list.files(grades_sub_dir))
+  } else { # let's make sure we have this folder available!
+    dir.create(grades_sub_dir)
+  }
+
+  if(get_id_from_file_name) {
+    # remove .R
+    grades$ID <- tools::file_path_sans_ext(grades$ID)
+    # remove initial 01_
+    grades$ID <- sub("[0-9]+_", "", grades$ID)
+  }
+
+  grades2 <- grades
+  grades2$ID <- substr(grades2$ID, 1, char_to_keep)
+
+  write.csv(grades, file.path(grades_sub_dir, "grades.csv"), row.names = FALSE)
+  write.csv(grades2, file.path(grades_sub_dir, "grades_for_students.csv"), row.names = FALSE)
+
+  NULL
+}
+
+
+
+
+
 #' @export
 check_hw <- function(hw_sub_dir = "", base_dir = getwd(),
                      submissions_sub_dir = "submissions", sol_file, tests_to_run,
+                     create_grade_files = TRUE,
                      ...) {
   # if sol_file empty, find a file that includes the word "solutions"
   hw_sub_dir <- file.path(base_dir, hw_sub_dir)
@@ -81,6 +116,8 @@ check_hw <- function(hw_sub_dir = "", base_dir = getwd(),
                 mistakes_folder = file.path(hw_sub_dir, "mistakes"),
                 ...
                 )
+
+  if(create_grade_files) create_grade_files(results, hw_sub_dir)
 
   results
 }

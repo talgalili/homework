@@ -4,12 +4,11 @@
 \alias{test_students}
 \title{FUNCTION_TITLE}
 \usage{
-test_students(hw_submitters, sol_file, tests_to_run,
-  student_id_fun = NULL, timeout = 0.5, use_do.call,
-  check_sol_fun = function(student_sol, teacher_sol) {    
-  isTRUE(all.equal(student_sol, teacher_sol, tolerance = 0.01,
-  check.attributes = FALSE)) }, update_student_fun = NULL,
-  max_grade = 100)
+test_students(hw_submitters, sol_file, tests_to_run, timeout = 0.5,
+  use_do.call, check_sol_fun = function(student_sol, teacher_sol) {    
+  isTRUE(all.equal(student_sol, teacher_sol, tolerance = 1e-04, check.attributes
+  = FALSE)) }, update_student_fun = NULL, max_grade = 100,
+  mistakes_folder = "mistakes")
 }
 \arguments{
 \item{hw_submitters}{a vector of .R files to check}
@@ -27,9 +26,6 @@ each element inside "fo" will be a list of the form list("input", "b input"). (y
 list(a = "input", b = "b input") but then if the student wrote the function as function(A="not a", B = "not b")
 then his function would fail. Indicating the input just by the order makes it simpler).
 The function do.call will be used to run this input in fo.}
-
-\item{student_id_fun}{a character string indicating the name of the function a student was instructed to create that returns is id (for example my_id() {"id number"})
-If NULL, then the file name is used.}
 
 \item{timeout}{The number of seconds to wait for the function to end before deciding
 the student got into an infinite loop and to exist the function and declare the student failed to answer
@@ -55,6 +51,9 @@ this is when the teachers write fo <- function(x) {...}
 And the student writes fo <- function(y) {...}
 we can make sure to fix the student's mistake using:
 function(f) fix_first_arg_in_fun(f, "x")}
+
+\item{student_id_fun}{a character string indicating the name of the function a student was instructed to create that returns is id (for example my_id() {"id number"})
+If NULL, then the file name is used.}
 }
 \value{
 OUTPUT_DESCRIPTION
