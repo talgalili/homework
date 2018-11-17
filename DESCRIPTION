@@ -3,23 +3,20 @@ Type: Package
 Title: Automatically Check R Programming Homework Assignments
 Version: 0.2.0
 Date: 2018-11-17
-Authors@R: c(person("Tal", "Galili", role = c("aut", "cre", "cph"), email =
-    "tal.galili@gmail.com", comment = "https://www.r-statistics.com"))
-Description: This package aims to help teachers of R courses (especially when teaching how to program with R) to automatically check and grade homework assignments of students.
-Depends:
-    R (>= 3.0.0)
-Imports:
-    tools,
-    R.utils
-Suggests:
-    knitr,
-    covr,
-    testthat
+Authors@R: c(person("Tal", "Galili", role = c("aut", "cre", "cph"),
+        email = "tal.galili@gmail.com", comment =
+        "https://www.r-statistics.com"))
+Description: This package aims to help teachers of R courses (especially
+        when teaching how to program with R) to automatically check and
+        grade homework assignments of students.
+Depends: R (>= 3.0.0)
+Imports: tools,R.utils
+Suggests: knitr, covr, testthat
 VignetteBuilder: knitr
 License: GPL-3 + file LICENSE
 URL: https://cran.r-project.org/package=homework,
-    https://github.com/talgalili/homework/,
-    https://www.r-statistics.com/tag/homework/
+        https://github.com/talgalili/homework/,
+        https://www.r-statistics.com/tag/homework/
 BugReports: https://github.com/talgalili/homework/issues
 Encoding: UTF-8
 LazyData: true
