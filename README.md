@@ -48,7 +48,7 @@ Installation
 You can install homework from github with:
 
 ``` r
-# install.packages("devtools")
+if(!require(devtools)) install.packages("devtools")
 devtools::install_github("talgalili/homework")
 ```
 
