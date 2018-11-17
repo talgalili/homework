@@ -5,3 +5,6 @@ my_sum_wrong_name <- function(x) {
 }
 
 
+my_pwr_misspelled <- function(x, p) {
+  x^p
+}

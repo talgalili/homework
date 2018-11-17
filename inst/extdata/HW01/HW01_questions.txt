@@ -1,0 +1,3 @@
+Homework assignment 01:
+1) Please write a "my_sum" function which accepts a vector `x` and returns the sum of its elements
+2) Please write a "my_pwr" function which accepts a vector `x` and a numeric p, and returns the vector x in the power of p (for each element of x)

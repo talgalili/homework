@@ -7,4 +7,8 @@ my_sum <- function(x) {
   sum(x) + 5 # always wrong
 }
 
+my_pwr <- function(x, p) {
+  x^p + 5
+}
+
 
