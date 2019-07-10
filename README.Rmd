@@ -63,8 +63,8 @@ hw
 You can install homework from github with:
 
 ```{r gh-installation, eval = FALSE}
-if(!require(devtools)) install.packages("devtools")
-devtools::install_github("talgalili/homework")
+if(!requireNamespace("remotes", quietly=TRUE)) install.packages("remotes")
+remotes::install_github("talgalili/homework")
 ```
 
 ## Example
